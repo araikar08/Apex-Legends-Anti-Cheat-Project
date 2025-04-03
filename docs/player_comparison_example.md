@@ -8,7 +8,7 @@
 - **Total Kills**: 5,699
 - **Total Damage**: 2,929,565
 - **Damage per Match**: 7,710
-- **Headshot Ratio**: 0.00% (data anomaly)
+- **Headshot Ratio**: 0.00% (Working on this)
 - **Confidence Score**: 30.00%
 
 **Legitimate Indicators**:
