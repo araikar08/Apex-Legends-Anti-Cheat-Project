@@ -9,12 +9,14 @@ class PlayerAnalyzer:
     def __init__(self):
         self.db = DatabaseManager()
 
+    # Basic stat calculations
     def calculate_kdr(self, kills, deaths):
         return kills / deaths if deaths > 0 else kills
 
     def calculate_headshot_ratio(self, headshots, kills):
         return headshots / kills if kills > 0 else 0
 
+    # Main analysis function
     def analyze_player(self, player_uid):
         stats = self.db.get_player_stats(player_uid)
         if not stats:
@@ -27,8 +29,9 @@ class PlayerAnalyzer:
 
         kdr = self.calculate_kdr(kills, deaths)
         hs_ratio = self.calculate_headshot_ratio(headshots, kills)
-        damage_per_match = damage / matches_played
+        dpm = damage / matches_played
 
+        # Check for suspicious activity
         suspicious = False
         reasons = []
         confidence = 0.0
@@ -43,9 +46,9 @@ class PlayerAnalyzer:
             reasons.append(f"High headshot ratio: {hs_ratio:.2%}")
             confidence += 0.3
 
-        if damage_per_match > 2000:  # Arbitrary threshold
+        if dpm > 2000:  # High damage threshold
             suspicious = True
-            reasons.append(f"High damage per match: {damage_per_match:.0f}")
+            reasons.append(f"High damage per match: {dpm:.0f}")
             confidence += 0.3
 
         if suspicious:
@@ -58,7 +61,7 @@ class PlayerAnalyzer:
         return {
             'kdr': kdr,
             'headshot_ratio': hs_ratio,
-            'damage_per_match': damage_per_match,
+            'damage_per_match': dpm,
             'suspicious': suspicious,
             'reasons': reasons,
             'confidence': confidence

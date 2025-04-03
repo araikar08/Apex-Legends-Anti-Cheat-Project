@@ -19,19 +19,33 @@ lib64/
 parts/
 sdist/
 var/
+wheels/
 *.egg-info/
 .installed.cfg
 *.egg
 
-# Database
-*.db
-*.sqlite3
+# Virtual Environment
+venv/
+ENV/
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# API Keys and Secrets
+config.py
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite3
+
+# Logs
+*.log
+logs/
 
 # OS
 .DS_Store

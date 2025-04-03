@@ -1,6 +1,7 @@
 from api.data_fetcher import DataFetcher
 from analysis.player_analyzer import PlayerAnalyzer
 from analysis.anomaly_detector import AnomalyDetector
+from analysis.ml_analyzer import MLAnomalyDetector
 from config import PLATFORMS
 import argparse
 
@@ -8,13 +9,18 @@ def analyze_player(player_name, platform):
     fetcher = DataFetcher()
     analyzer = PlayerAnalyzer()
     detector = AnomalyDetector()
+    ml_detector = MLAnomalyDetector()
 
     try:
+        print(f"\nFetching data for {player_name}...")
         # Fetch and store player data
         result = fetcher.fetch_and_store_player_data(player_name, platform)
         player_uid = result['uid']
+        print(f"Player UID: {player_uid}")
+        print(f"Raw stats: {result['stats']}")
 
         # Analyze player
+        print("\nAnalyzing player data...")
         analysis = analyzer.analyze_player(player_uid)
         if not analysis:
             print(f"Not enough data for {player_name}")
@@ -22,6 +28,9 @@ def analyze_player(player_name, platform):
 
         # Detect anomalies
         anomalies = detector.detect_anomalies(player_uid)
+        
+        # ML Analysis
+        ml_results = ml_detector.detect_anomalies(analysis)
 
         # Print results
         print(f"\nAnalysis for {player_name}:")
@@ -39,6 +48,11 @@ def analyze_player(player_name, platform):
             print("\nStatistical Anomalies Detected:")
             for anomaly in anomalies['anomalies']:
                 print(f"- {anomaly}")
+                
+        if ml_results['is_anomaly']:
+            print("\nML Analysis Results:")
+            print(f"- ML Confidence Score: {ml_results['ml_confidence']:.2%}")
+            print(f"- Normalized Features: {ml_results['features']}")
 
     except Exception as e:
         print(f"Error analyzing {player_name}: {str(e)}")
